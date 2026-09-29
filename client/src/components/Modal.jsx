@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 function Modal({
   title,
@@ -11,18 +12,19 @@ function Modal({
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "";
+    };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div className="modal-backdrop-custom" onClick={onClose}>
-      <div
-        className="d-flex align-items-center justify-content-center"
-        style={{ position: "fixed", inset: 0, zIndex: 1060 }}
-      >
+      <div className="modal-center-wrap">
         <div
           className="modal-dialog-custom p-4"
-          style={{ width: "90%", maxWidth: 420 }}
+          style={{ maxWidth: 420 }}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
@@ -45,7 +47,37 @@ function Modal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
+  );
+}
+
+// A second, reusable export for modals with custom content (forms, etc.)
+// instead of the fixed confirm/cancel footer above.
+export function ModalShell({ children, onClose, maxWidth = 640 }) {
+  useEffect(() => {
+    const handleEsc = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", handleEsc);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className="modal-backdrop-custom" onClick={onClose}>
+      <div className="modal-center-wrap">
+        <div
+          className="modal-dialog-custom p-4"
+          style={{ width: "100%", maxWidth }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {children}
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 

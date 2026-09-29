@@ -6,6 +6,7 @@ import connectDB from './config/db.js';
 import healthRoutes from './routes/healthRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+import roomRoutes from './routes/roomRoutes.js';
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(express.json());
 
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/rooms', roomRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
