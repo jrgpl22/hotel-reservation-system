@@ -7,7 +7,7 @@ import healthRoutes from './routes/healthRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import roomRoutes from './routes/roomRoutes.js';
-
+import reservationRoutes from './routes/reservationRoutes.js';
 const app = express();
 
 app.use(helmet());
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/reservations', reservationRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
