@@ -798,3 +798,67 @@ hr, .divider {
   justify-content: center;
   padding: 1rem;
 }
+
+/* ==========================================================================
+   DASHBOARD
+   ========================================================================== */
+
+/* Entrance: "backwards" fill means hover transforms still work after it ends */
+.stagger-in {
+  animation: staggerIn 420ms var(--ease-out) backwards;
+}
+
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+.dash-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-primary-dark);
+}
+
+.dash-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-text-muted);
+}
+
+.dash-dot-success { background: var(--color-success); }
+.dash-dot-warning { background: var(--color-warning); }
+.dash-dot-danger  { background: var(--color-danger); }
+.dash-dot-info    { background: var(--color-info); }
+
+.dash-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-border);
+}
+
+.dash-bar-seg {
+  height: 100%;
+  transform-origin: left;
+  animation: barGrow 700ms var(--ease-out) backwards;
+}
+
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+}
+
+.dash-seg-success { background: var(--color-success); }
+.dash-seg-warning { background: var(--color-warning); }
+.dash-seg-danger  { background: var(--color-danger); }
+.dash-seg-info    { background: var(--color-info); }
+
+.dash-callout {
+  background: var(--color-warning-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
