@@ -1,5 +1,15 @@
 import { Link } from "react-router-dom";
-import { resolveImageUrl, FALLBACK_ROOM_IMAGE } from "../../utils/images";
+import {
+  resolveImageUrl,
+  getRoomImages,
+  FALLBACK_ROOM_IMAGE,
+} from "../../utils/images";
+
+const imageUrl = resolveImageUrl(getRoomImages(room)[0], {
+  width: 600,
+  fallback: FALLBACK_ROOM_IMAGE,
+});
+
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80";
 

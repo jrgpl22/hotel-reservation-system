@@ -1,6 +1,26 @@
 import Room from '../models/Room.js';
 import Reservation from '../models/Reservation.js';
 import { deleteStoredImageIfUnused } from '../utils/storedImages.js';
+
+
+const ROOM_FIELDS = [
+  'roomNumber', 'roomType', 'description', 'pricePerNight',
+  'capacity', 'bedType', 'amenities', 'images', 'status',
+];
+
+// Only these fields can be written. Anything else in the request body is ignored.
+const pickRoomFields = (body) => {
+  const data = {};
+  ROOM_FIELDS.forEach((field) => {
+    if (body[field] !== undefined) data[field] = body[field];
+  });
+  // The cover always mirrors the first photo, so code that reads room.image keeps working
+  if (data.images) data.image = data.images[0] || '';
+  return data;
+};
+
+const allImagesOf = (room) => [...new Set([room.image, ...(room.images || [])].filter(Boolean))];
+
 // @route GET /api/rooms
 export const getRooms = async (req, res, next) => {
   try {
@@ -68,6 +88,7 @@ export const getRoomById = async (req, res, next) => {
   }
 };
 
+
 // @route POST /api/rooms (admin only)
 export const createRoom = async (req, res, next) => {
   try {
@@ -77,7 +98,7 @@ export const createRoom = async (req, res, next) => {
       throw new Error('A room with this number already exists');
     }
 
-    const room = await Room.create(req.body);
+    const room = await Room.create(pickRoomFields(req.body));
     res.status(201).json({ success: true, message: 'Room created successfully', room });
   } catch (error) {
     next(error);
@@ -86,13 +107,6 @@ export const createRoom = async (req, res, next) => {
 
 // @route PUT /api/rooms/:id (admin only)
 export const updateRoom = async (req, res, next) => {
-      const previousImage = room.image;
-    Object.assign(room, req.body);
-    const updated = await room.save();
-
-    if (previousImage && previousImage !== updated.image) {
-      await deleteStoredImageIfUnused(previousImage);
-    }
   try {
     const room = await Room.findById(req.params.id);
     if (!room) {
@@ -100,8 +114,15 @@ export const updateRoom = async (req, res, next) => {
       throw new Error('Room not found');
     }
 
-    Object.assign(room, req.body);
+    const previousImages = allImagesOf(room);
+    Object.assign(room, pickRoomFields(req.body));
     const updated = await room.save();
+
+    // Remove uploaded photos that this room no longer uses
+    const currentImages = allImagesOf(updated);
+    await Promise.all(
+      previousImages.filter((path) => !currentImages.includes(path)).map((path) => deleteStoredImageIfUnused(path))
+    );
 
     res.json({ success: true, message: 'Room updated successfully', room: updated });
   } catch (error) {
@@ -132,7 +153,8 @@ export const deleteRoom = async (req, res, next) => {
     }
 
     await room.deleteOne();
-        await deleteStoredImageIfUnused(room.image);
+    await Promise.all(allImagesOf(room).map((path) => deleteStoredImageIfUnused(path)));
+
     res.json({ success: true, message: 'Room deleted successfully' });
   } catch (error) {
     next(error);

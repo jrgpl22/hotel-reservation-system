@@ -45,3 +45,10 @@ export const prepareImageForUpload = async (file, { maxSize = 1600, quality = 0.
     );
   });
 };
+
+// Rooms created before multi-photo support only have `image`; newer rooms use `images`
+export const getRoomImages = (room) => {
+  if (!room) return [];
+  if (Array.isArray(room.images) && room.images.length > 0) return room.images;
+  return room.image ? [room.image] : [];
+};

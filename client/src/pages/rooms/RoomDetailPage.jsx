@@ -4,7 +4,7 @@ import api from "../../services/api";
 import StatusBadge from "../../components/StatusBadge";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { resolveImageUrl, FALLBACK_ROOM_IMAGE } from "../../utils/images";
+import RoomGallery from "../../components/rooms/RoomGallery";
 
 function RoomDetailPage() {
   const { id } = useParams();
@@ -42,23 +42,9 @@ function RoomDetailPage() {
     );
   if (!room) return null;
 
-  const imageUrl = resolveImageUrl(room.image, {
-    width: 1200,
-    fallback: FALLBACK_ROOM_IMAGE,
-  });
-
   return (
     <div className="container section">
-      <img
-        src={imageUrl}
-        alt={room.roomType}
-        className="w-100 mb-4"
-        style={{
-          borderRadius: "var(--radius-lg)",
-          maxHeight: 420,
-          objectFit: "cover",
-        }}
-      />
+      <RoomGallery room={room} />
 
       <div className="row g-5">
         <div className="col-md-7">

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import ImageUploader from "../ImageUploader";
+import MultiImageUploader from "../MultiImageUploader";
+import { getRoomImages } from "../../utils/images";
+
 const EMPTY_FORM = {
   roomNumber: "",
   roomType: "",
@@ -8,7 +10,7 @@ const EMPTY_FORM = {
   capacity: "",
   bedType: "",
   amenities: "",
-  image: "",
+  images: [],
   status: "available",
 };
 
@@ -19,8 +21,15 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
   useEffect(() => {
     if (initialData) {
       setForm({
-        ...initialData,
+        roomNumber: initialData.roomNumber || "",
+        roomType: initialData.roomType || "",
+        description: initialData.description || "",
+        pricePerNight: initialData.pricePerNight ?? "",
+        capacity: initialData.capacity ?? "",
+        bedType: initialData.bedType || "",
         amenities: (initialData.amenities || []).join(", "),
+        images: getRoomImages(initialData),
+        status: initialData.status || "available",
       });
     } else {
       setForm(EMPTY_FORM);
@@ -36,7 +45,7 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
     const errs = {};
     if (!form.roomNumber.trim()) errs.roomNumber = "Room number is required";
     if (!form.roomType.trim()) errs.roomType = "Room type is required";
-    if (!form.pricePerNight || Number(form.pricePerNight) < 0)
+    if (form.pricePerNight === "" || Number(form.pricePerNight) < 0)
       errs.pricePerNight = "Enter a valid price";
     if (!form.capacity || Number(form.capacity) < 1)
       errs.capacity = "Capacity must be at least 1";
@@ -51,19 +60,32 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
       return;
     }
     onSubmit({
-      ...form,
+      roomNumber: form.roomNumber.trim(),
+      roomType: form.roomType.trim(),
+      description: form.description.trim(),
       pricePerNight: Number(form.pricePerNight),
       capacity: Number(form.capacity),
+      bedType: form.bedType.trim(),
       amenities: form.amenities
         .split(",")
         .map((item) => item.trim())
         .filter(Boolean),
+      images: form.images,
+      status: form.status,
     });
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="row g-3">
+        <div className="col-12">
+          <MultiImageUploader
+            label="Room photos"
+            images={form.images}
+            onChange={(images) => setForm({ ...form, images })}
+          />
+        </div>
+
         <div className="col-md-6">
           <label className="form-label">Room number</label>
           <input
@@ -91,15 +113,7 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
             <div className="invalid-feedback d-block">{errors.roomType}</div>
           )}
         </div>
-        <div className="col-12">
-          <ImageUploader
-            kind="room"
-            label="Room photo"
-            value={form.image}
-            onChange={(path) => setForm({ ...form, image: path })}
-            hint="JPG, PNG, or WebP. Large photos are resized automatically."
-          />
-        </div>
+
         <div className="col-12">
           <label className="form-label">Description</label>
           <textarea

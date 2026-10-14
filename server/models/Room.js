@@ -35,9 +35,17 @@ const roomSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    image: {
+       image: {
       type: String,
       trim: true,
+    },
+    images: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: (list) => list.length <= 6,
+        message: 'A room can have at most 6 photos',
+      },
     },
     status: {
       type: String,

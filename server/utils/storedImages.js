@@ -19,7 +19,7 @@ export const deleteStoredImageIfUnused = async (path) => {
 
   try {
     const [usedByRoom, usedByUser] = await Promise.all([
-      Room.exists({ image: path }),
+      Room.exists({ $or: [{ image: path }, { images: path }] }),
       User.exists({ avatar: path }),
     ]);
     if (!usedByRoom && !usedByUser) await Image.findByIdAndDelete(id);
