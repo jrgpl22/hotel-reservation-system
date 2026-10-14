@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ROLE_LABELS } from "../utils/constants";
-
+import Avatar from "./Avatar";
 function AdminTopBar({ onToggleSidebar }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -39,12 +39,8 @@ function AdminTopBar({ onToggleSidebar }) {
       </div>
 
       <div className="user-chip">
-        <Link
-          to="/admin/profile"
-          className="user-chip-avatar"
-          aria-label="My profile"
-        >
-          {user.name.charAt(0).toUpperCase()}
+        <Link to="/admin/profile" className="d-flex" aria-label="My profile">
+          <Avatar name={user.name} src={user.avatar} />
         </Link>
         <Link to="/admin/profile" className="user-chip-name d-none d-sm-inline">
           {user.name}

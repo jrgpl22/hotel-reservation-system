@@ -4,9 +4,7 @@ import api from "../../services/api";
 import StatusBadge from "../../components/StatusBadge";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-
-const FALLBACK_IMG =
-  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80";
+import { resolveImageUrl, FALLBACK_ROOM_IMAGE } from "../../utils/images";
 
 function RoomDetailPage() {
   const { id } = useParams();
@@ -44,11 +42,10 @@ function RoomDetailPage() {
     );
   if (!room) return null;
 
-  const imageUrl = room.image?.startsWith("http")
-    ? room.image
-    : room.image
-      ? `https://images.unsplash.com/${room.image}?auto=format&fit=crop&w=1200&q=80`
-      : FALLBACK_IMG;
+  const imageUrl = resolveImageUrl(room.image, {
+    width: 1200,
+    fallback: FALLBACK_ROOM_IMAGE,
+  });
 
   return (
     <div className="container section">

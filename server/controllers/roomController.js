@@ -1,6 +1,6 @@
 import Room from '../models/Room.js';
 import Reservation from '../models/Reservation.js';
-
+import { deleteStoredImageIfUnused } from '../utils/storedImages.js';
 // @route GET /api/rooms
 export const getRooms = async (req, res, next) => {
   try {
@@ -86,6 +86,13 @@ export const createRoom = async (req, res, next) => {
 
 // @route PUT /api/rooms/:id (admin only)
 export const updateRoom = async (req, res, next) => {
+      const previousImage = room.image;
+    Object.assign(room, req.body);
+    const updated = await room.save();
+
+    if (previousImage && previousImage !== updated.image) {
+      await deleteStoredImageIfUnused(previousImage);
+    }
   try {
     const room = await Room.findById(req.params.id);
     if (!room) {
@@ -125,6 +132,7 @@ export const deleteRoom = async (req, res, next) => {
     }
 
     await room.deleteOne();
+        await deleteStoredImageIfUnused(room.image);
     res.json({ success: true, message: 'Room deleted successfully' });
   } catch (error) {
     next(error);

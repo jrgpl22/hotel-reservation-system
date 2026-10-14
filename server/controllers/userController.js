@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 import Reservation from '../models/Reservation.js';
-
+import { deleteStoredImageIfUnused } from '../utils/storedImages.js';
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
 
@@ -16,9 +16,11 @@ const toUserResponse = (user) => ({
   email: user.email,
   phone: user.phone || '',
   role: user.role,
+    avatar: user.avatar || '',
   isActive: user.isActive !== false, // accounts created before this field existed count as active
   createdAt: user.createdAt,
   updatedAt: user.updatedAt,
+
 });
 
 const isActiveAdmin = (user) => user.role === 'admin' && user.isActive !== false;
@@ -170,6 +172,7 @@ export const deleteUser = async (req, res, next) => {
     }
 
     await user.deleteOne();
+        await deleteStoredImageIfUnused(user.avatar);
     res.json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
     next(error);

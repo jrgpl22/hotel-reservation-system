@@ -17,6 +17,12 @@ export const errorHandler = (err, req, res, next) => {
   } else if (err.code === 11000) {
     statusCode = 409;
     message = `${Object.keys(err.keyValue)[0]} already exists`;
+  } else if (err.name === 'MulterError') {
+    statusCode = err.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
+    message =
+      err.code === 'LIMIT_FILE_SIZE'
+        ? 'That image is too large. Please choose one under 2 MB'
+        : 'Unable to read the uploaded file';
   }
 
   res.status(statusCode).json({

@@ -1,6 +1,6 @@
 import { RoleBadge, AccountStatusBadge } from "./UserBadges";
 import { formatDate } from "../../../utils/formatters";
-
+import Avatar from "../../Avatar";
 function UserTable({ users, currentUserId, onView, onEdit, onDelete }) {
   return (
     <div className="surface" style={{ overflowX: "auto" }}>
@@ -22,9 +22,7 @@ function UserTable({ users, currentUserId, onView, onEdit, onDelete }) {
               <tr key={user._id}>
                 <td>
                   <div className="d-flex align-items-center gap-3">
-                    <span className="user-chip-avatar">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
+                    <Avatar name={user.name} src={user.avatar} />
                     <div>
                       <p className="fw-semibold mb-0">
                         {user.name}

@@ -1,7 +1,7 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BRAND_NAME, USER_ROLES } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
-
+import Avatar from "./Avatar";
 function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -53,8 +53,8 @@ function Navbar() {
                 </Link>
               )}
               <div className="user-chip">
-                <Link to="/profile" className="user-chip-avatar">
-                  {user.name.charAt(0).toUpperCase()}
+                <Link to="/profile" className="d-flex" aria-label="My profile">
+                  <Avatar name={user.name} src={user.avatar} />
                 </Link>
                 <Link
                   to="/profile"

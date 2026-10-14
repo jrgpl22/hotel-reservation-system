@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import ImageUploader from "../ImageUploader";
 const EMPTY_FORM = {
   roomNumber: "",
   roomType: "",
@@ -91,7 +91,15 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
             <div className="invalid-feedback d-block">{errors.roomType}</div>
           )}
         </div>
-
+        <div className="col-12">
+          <ImageUploader
+            kind="room"
+            label="Room photo"
+            value={form.image}
+            onChange={(path) => setForm({ ...form, image: path })}
+            hint="JPG, PNG, or WebP. Large photos are resized automatically."
+          />
+        </div>
         <div className="col-12">
           <label className="form-label">Description</label>
           <textarea

@@ -3,7 +3,7 @@ import StatusBadge from "../../StatusBadge";
 import Loading from "../../Loading";
 import ErrorMessage from "../../ErrorMessage";
 import { formatDate } from "../../../utils/formatters";
-
+import Avatar from "../../Avatar";
 function DetailField({ label, value }) {
   return (
     <div className="col-sm-6">
@@ -21,9 +21,7 @@ function UserDetails({ user, details, onClose, onEdit }) {
   return (
     <div>
       <div className="d-flex align-items-center gap-3 mb-4">
-        <span className="user-chip-avatar user-avatar-lg">
-          {user.name.charAt(0).toUpperCase()}
-        </span>
+        <Avatar name={user.name} src={user.avatar} size="lg" />
         <div>
           <h4 className="mb-2">{user.name}</h4>
           <div className="d-flex flex-wrap gap-2">

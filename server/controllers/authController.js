@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
-
+import Image from '../models/Image.js';
+import { getStoredImageId, deleteStoredImageIfUnused } from '../utils/storedImages.js';
 // @route  POST /api/auth/register
 export const registerUser = async (req, res, next) => {
   try {
@@ -26,6 +27,7 @@ export const registerUser = async (req, res, next) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+                avatar: user.avatar || '',
       },
     });
   } catch (error) {
@@ -60,6 +62,7 @@ export const loginUser = async (req, res, next) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+                avatar: user.avatar || '',
       },
     });
   } catch (error) {
@@ -84,6 +87,7 @@ export const getCurrentUser = async (req, res, next) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+                avatar: user.avatar || '',
       },
     });
   } catch (error) {
@@ -100,14 +104,37 @@ export const updateCurrentUser = async (req, res, next) => {
       throw new Error('User not found');
     }
 
+    const previousAvatar = user.avatar;
+
     user.name = req.body.name ?? user.name;
     user.phone = req.body.phone ?? user.phone;
     if (req.body.password) {
       user.password = req.body.password; // pre('save') hook re-hashes it
     }
-    
+
+    if (req.body.avatar !== undefined) {
+      const nextAvatar = req.body.avatar;
+
+      // An empty string removes the photo. Anything else must be an avatar this user uploaded.
+      if (nextAvatar !== '') {
+        const imageId = getStoredImageId(nextAvatar);
+        const ownsImage =
+          imageId &&
+          (await Image.exists({ _id: imageId, kind: 'avatar', uploadedBy: req.user.id }));
+
+        if (!ownsImage) {
+          res.status(400);
+          throw new Error('Invalid profile photo');
+        }
+      }
+      user.avatar = nextAvatar;
+    }
 
     const updated = await user.save();
+
+    if (previousAvatar && previousAvatar !== updated.avatar) {
+      await deleteStoredImageIfUnused(previousAvatar);
+    }
 
     res.json({
       success: true,
@@ -118,6 +145,7 @@ export const updateCurrentUser = async (req, res, next) => {
         email: updated.email,
         phone: updated.phone,
         role: updated.role,
+        avatar: updated.avatar || '',
       },
     });
   } catch (error) {

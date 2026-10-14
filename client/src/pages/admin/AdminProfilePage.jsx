@@ -1,7 +1,7 @@
 import { useAuth } from "../../context/AuthContext";
 import { ROLE_LABELS } from "../../utils/constants";
 import ProfileForm from "../../components/profile/ProfileForm";
-
+import Avatar from "../../components/Avatar";
 function AdminProfilePage() {
   const { user } = useAuth();
 
@@ -18,9 +18,12 @@ function AdminProfilePage() {
       <div className="row g-4">
         <div className="col-lg-4">
           <div className="surface p-4 text-center">
-            <span className="user-chip-avatar user-avatar-lg mx-auto mb-3">
-              {user.name.charAt(0).toUpperCase()}
-            </span>
+            <Avatar
+              name={user.name}
+              src={user.avatar}
+              size="lg"
+              className="mx-auto mb-3"
+            />
             <h4 className="mb-1">{user.name}</h4>
             <p className="text-small text-muted-custom mb-3">{user.email}</p>
             <span className={`badge-status badge-role-${user.role}`}>

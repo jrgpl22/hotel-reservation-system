@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
-
+import { resolveImageUrl, FALLBACK_ROOM_IMAGE } from "../../utils/images";
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80";
 
 function RoomCard({ room }) {
-  const imageUrl = room.image?.startsWith("http")
-    ? room.image
-    : room.image
-      ? `https://images.unsplash.com/${room.image}?auto=format&fit=crop&w=600&q=80`
-      : FALLBACK_IMG;
+  const imageUrl = resolveImageUrl(room.image, {
+    width: 600,
+    fallback: FALLBACK_ROOM_IMAGE,
+  });
 
   return (
     <div className="card card-hover h-100">

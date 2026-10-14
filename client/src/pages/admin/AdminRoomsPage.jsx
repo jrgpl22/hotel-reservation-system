@@ -7,7 +7,7 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import Modal, { ModalShell } from "../../components/Modal";
 import Toast from "../../components/Toast";
-
+import { resolveImageUrl, FALLBACK_ROOM_IMAGE } from "../../utils/images";
 function AdminRoomsPage() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -148,7 +148,19 @@ function AdminRoomsPage() {
             <tbody>
               {rooms.map((room) => (
                 <tr key={room._id}>
-                  <td>{room.roomNumber}</td>
+                  <td>
+                    <div className="d-flex align-items-center gap-3">
+                      <img
+                        className="room-thumb"
+                        src={resolveImageUrl(room.image, {
+                          width: 120,
+                          fallback: FALLBACK_ROOM_IMAGE,
+                        })}
+                        alt=""
+                      />
+                      <span className="fw-semibold">{room.roomNumber}</span>
+                    </div>
+                  </td>
                   <td>{room.roomType}</td>
                   <td>₱{room.pricePerNight?.toLocaleString()}</td>
                   <td>{room.capacity}</td>
