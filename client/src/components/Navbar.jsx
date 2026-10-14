@@ -2,6 +2,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BRAND_NAME, USER_ROLES } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
 import Avatar from "./Avatar";
+import BrandMark from "./BrandMark";
 function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Navbar() {
     <header className="navbar-custom">
       <div className="container navbar-grid py-3">
         <Link to="/" className="navbar-brand-custom">
-          {BRAND_NAME}
+          <BrandMark />
         </Link>
 
         <nav className="d-none d-md-flex align-items-center justify-content-center gap-5">

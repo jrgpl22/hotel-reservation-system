@@ -1,14 +1,26 @@
 import mongoose from 'mongoose';
-import dns from 'dns';
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+
+let connectionPromise = null;
+
+// Safe to call on every request: it connects once and reuses the connection,
+// which is what serverless hosting needs.
 const connectDB = async () => {
-  try {
-    const connection = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`MongoDB connected: ${connection.connection.host}`);
-  } catch (error) {
-    console.error(`MongoDB connection failed: ${error.message}`);
-    process.exit(1);
+  if (mongoose.connection.readyState === 1) return mongoose.connection;
+
+  if (!connectionPromise) {
+    connectionPromise = mongoose
+      .connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 })
+      .then((instance) => {
+        console.log(`MongoDB connected: ${instance.connection.host}`);
+        return instance.connection;
+      })
+      .catch((error) => {
+        connectionPromise = null; // let the next request try again
+        throw error;
+      });
   }
+
+  return connectionPromise;
 };
 
 export default connectDB;

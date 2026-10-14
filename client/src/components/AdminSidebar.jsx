@@ -2,7 +2,7 @@ import { NavLink, Link } from "react-router-dom";
 import { BRAND_NAME, USER_ROLES } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
 import Icon from "./Icon";
-
+import BrandMark from "./BrandMark";
 const { ADMIN, STAFF } = USER_ROLES;
 
 const links = [
@@ -30,7 +30,9 @@ function AdminSidebar({ open = false, onNavigate = () => {} }) {
   return (
     <aside className={`admin-sidebar d-flex flex-column${open ? " open" : ""}`}>
       <div>
-        <div className="admin-sidebar-brand">{BRAND_NAME}</div>
+        <div className="admin-sidebar-brand">
+          <BrandMark size={32} onDark />
+        </div>
         <nav className="d-flex flex-column gap-1 mt-4">
           {visibleLinks.map((link) => (
             <NavLink

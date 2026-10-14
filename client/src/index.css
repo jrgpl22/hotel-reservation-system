@@ -1349,3 +1349,23 @@ a {
 .back-link:hover {
   color: var(--color-primary);
 }
+/* Brand logo */
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-logo {
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+/* A soft light disc keeps a dark logo visible on the dark green backgrounds */
+.brand-logo.on-dark {
+  background: var(--color-background);
+  border-radius: 50%;
+  padding: 3px;
+}

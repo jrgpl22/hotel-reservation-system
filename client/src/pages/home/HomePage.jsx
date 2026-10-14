@@ -24,7 +24,7 @@ function HomePage() {
         <div className="container hero-content">
           <p className="eyebrow mb-2">Est. 2026</p>
           <h1 className="mb-3">
-            A quiet place to stay, in the middle of everything.
+            Where every stay feels like heart, and every moment feels like home.
           </h1>
           <p className="mb-4" style={{ color: "#E4DECF" }}>
             Thoughtfully designed rooms, easy booking, and a team that takes
