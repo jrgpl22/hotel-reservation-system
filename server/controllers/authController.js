@@ -42,6 +42,10 @@ export const loginUser = async (req, res, next) => {
     if (!user || !(await user.matchPassword(password))) {
       res.status(401);
       throw new Error('Invalid email or password');
+    }    
+    if (user.isActive === false) {
+      res.status(403);
+      throw new Error('This account has been deactivated. Please contact the hotel.');
     }
 
     const token = generateToken(user._id, user.role);
@@ -101,6 +105,7 @@ export const updateCurrentUser = async (req, res, next) => {
     if (req.body.password) {
       user.password = req.body.password; // pre('save') hook re-hashes it
     }
+    
 
     const updated = await user.save();
 

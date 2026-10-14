@@ -3,7 +3,11 @@ export const USER_ROLES = {
   STAFF: 'staff',
   ADMIN: 'admin',
 };
-
+export const ROLE_LABELS = {
+  [USER_ROLES.GUEST]: 'Guest',
+  [USER_ROLES.STAFF]: 'Staff',
+  [USER_ROLES.ADMIN]: 'Admin',
+};
 export const ROOM_STATUS = {
   AVAILABLE: 'available',
   MAINTENANCE: 'maintenance',

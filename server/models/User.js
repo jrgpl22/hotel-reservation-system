@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       enum: ['guest', 'staff', 'admin'],
       default: 'guest',
     },
+        isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true } // adds createdAt and updatedAt automatically
 );
