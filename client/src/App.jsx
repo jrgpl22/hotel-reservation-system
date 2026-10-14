@@ -15,6 +15,8 @@ import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import AdminRoomsPage from "./pages/admin/AdminRoomsPage";
 import AdminUsersPage from "./pages/admin/AdminUsersPage";
 import AdminReservationsPage from "./pages/admin/AdminReservationsPage";
+import AdminProfilePage from "./pages/admin/AdminProfilePage";
+import { USER_ROLES } from "./utils/constants";
 
 function App() {
   return (
@@ -35,16 +37,25 @@ function App() {
         </Route>
       </Route>
 
-      {/* Admin only */}
-      <Route element={<ProtectedRoute roles={["admin"]} />}>
+      {/* Staff and admin share the admin shell */}
+      <Route
+        element={
+          <ProtectedRoute roles={[USER_ROLES.ADMIN, USER_ROLES.STAFF]} />
+        }
+      >
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboardPage />} />
-          <Route path="/admin/rooms" element={<AdminRoomsPage />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route
             path="/admin/reservations"
             element={<AdminReservationsPage />}
           />
+          <Route path="/admin/profile" element={<AdminProfilePage />} />
+
+          {/* Admin only */}
+          <Route element={<ProtectedRoute roles={[USER_ROLES.ADMIN]} />}>
+            <Route path="/admin/rooms" element={<AdminRoomsPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

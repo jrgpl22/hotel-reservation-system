@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
+import { USER_ROLES } from "../../../utils/constants";
 
 function QuickActions({ pendingCount = 0 }) {
+  const { user } = useAuth();
+  const canManageRooms = user?.role === USER_ROLES.ADMIN;
+
   return (
     <div
       className="surface p-4 h-100 stagger-in"
@@ -32,9 +37,11 @@ function QuickActions({ pendingCount = 0 }) {
         <Link to="/admin/reservations" className="btn btn-primary">
           View reservations
         </Link>
-        <Link to="/admin/rooms" className="btn btn-outline-primary">
-          Manage rooms
-        </Link>
+        {canManageRooms && (
+          <Link to="/admin/rooms" className="btn btn-outline-primary">
+            Manage rooms
+          </Link>
+        )}
       </div>
     </div>
   );

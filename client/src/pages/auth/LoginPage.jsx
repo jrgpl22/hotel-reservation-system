@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import { getHomePath } from "../../utils/constants";
 function LoginPage() {
   const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(user.role === "admin" ? "/admin" : "/", { replace: true });
+      navigate(getHomePath(user.role), { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -43,8 +43,7 @@ function LoginPage() {
     try {
       const user = await login(form.email, form.password);
       const redirectTo =
-        location.state?.from?.pathname ||
-        (user.role === "admin" ? "/admin" : "/");
+        location.state?.from?.pathname || getHomePath(user.role);
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setFormError(

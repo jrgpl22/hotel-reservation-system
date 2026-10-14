@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BRAND_NAME } from "../utils/constants";
+import { BRAND_NAME, USER_ROLES } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
@@ -44,7 +44,40 @@ function Navbar() {
           </NavLink>
         </nav>
 
-        {/* ...right-side user chip section unchanged... */}
+        <div className="d-flex align-items-center justify-content-end gap-3">
+          {isAuthenticated ? (
+            <>
+              {user.role !== USER_ROLES.GUEST && (
+                <Link to="/admin" className="btn btn-outline-primary btn-sm">
+                  Admin panel
+                </Link>
+              )}
+              <div className="user-chip">
+                <Link to="/profile" className="user-chip-avatar">
+                  {user.name.charAt(0).toUpperCase()}
+                </Link>
+                <Link
+                  to="/profile"
+                  className="user-chip-name d-none d-lg-inline"
+                >
+                  {user.name.split(" ")[0]}
+                </Link>
+                <button className="user-chip-logout" onClick={handleLogout}>
+                  Log out
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn btn-outline-primary btn-sm">
+                Sign in
+              </Link>
+              <Link to="/register" className="btn btn-primary btn-sm">
+                Book a stay
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import { getHomePath } from "../../utils/constants";
 function RegisterPage() {
   const { register, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function RegisterPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(user.role === "admin" ? "/admin" : "/", { replace: true });
+      navigate(getHomePath(user.role), { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 

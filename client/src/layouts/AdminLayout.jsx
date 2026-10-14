@@ -1,20 +1,33 @@
+import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
+import AdminTopBar from "../components/AdminTopBar";
 
 function AdminLayout() {
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="d-flex min-vh-100">
-      <AdminSidebar />
-      <main
-        className="flex-grow-1 p-4 p-md-5"
-        style={{ background: "var(--color-background)" }}
-      >
-        <div key={location.pathname} className="page-enter">
-          <Outlet />
-        </div>
-      </main>
+    <div className="admin-shell">
+      <AdminSidebar
+        open={sidebarOpen}
+        onNavigate={() => setSidebarOpen(false)}
+      />
+      {sidebarOpen && (
+        <div
+          className="admin-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <div className="admin-main">
+        <AdminTopBar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
+        <main className="admin-content">
+          <div key={location.pathname} className="page-enter">
+            <Outlet />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

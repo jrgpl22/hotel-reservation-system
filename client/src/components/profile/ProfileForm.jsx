@@ -1,0 +1,143 @@
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import Toast from "../Toast";
+
+const PHONE_PATTERN = /^[0-9+()\-\s]{7,20}$/;
+
+function ProfileForm() {
+  const { user, updateProfile } = useAuth();
+  const [form, setForm] = useState({
+    name: user.name,
+    phone: user.phone || "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
+  };
+
+  const validate = () => {
+    const found = {};
+    if (!form.name.trim()) found.name = "Please enter your name";
+    if (form.phone.trim() && !PHONE_PATTERN.test(form.phone.trim())) {
+      found.phone = "Enter a valid phone number";
+    }
+    if (form.password && form.password.length < 6) {
+      found.password = "Password must be at least 6 characters";
+    }
+    return found;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const found = validate();
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = { name: form.name.trim(), phone: form.phone.trim() };
+      if (form.password) payload.password = form.password;
+      await updateProfile(payload);
+      setForm((prev) => ({ ...prev, password: "" }));
+      setToast({
+        message: "Profile updated successfully",
+        type: "success",
+        id: Date.now(),
+      });
+    } catch (err) {
+      setToast({
+        message: err.userMessage || "Unable to update your profile",
+        type: "error",
+        id: Date.now(),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="mb-3">
+        <label className="form-label">Full name</label>
+        <input
+          type="text"
+          name="name"
+          className={`form-control ${errors.name ? "is-invalid" : ""}`}
+          value={form.name}
+          onChange={handleChange}
+        />
+        {errors.name && (
+          <div className="invalid-feedback d-block">{errors.name}</div>
+        )}
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label">Email address</label>
+        <input
+          type="text"
+          className="form-control"
+          value={user.email}
+          disabled
+        />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label">Phone</label>
+        <input
+          type="tel"
+          name="phone"
+          autoComplete="tel"
+          className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+          value={form.phone}
+          onChange={handleChange}
+        />
+        {errors.phone && (
+          <div className="invalid-feedback d-block">{errors.phone}</div>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label className="form-label">
+          New password (leave blank to keep current)
+        </label>
+        <input
+          type="password"
+          name="password"
+          autoComplete="new-password"
+          className={`form-control ${errors.password ? "is-invalid" : ""}`}
+          value={form.password}
+          onChange={handleChange}
+        />
+        {errors.password && (
+          <div className="invalid-feedback d-block">{errors.password}</div>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        className={`btn btn-primary ${loading ? "btn-loading" : ""}`}
+        disabled={loading}
+      >
+        Save changes
+      </button>
+
+      {toast && (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+    </form>
+  );
+}
+
+export default ProfileForm;

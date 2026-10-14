@@ -22,3 +22,5 @@ export const RESERVATION_STATUS = {
 
 export const TOKEN_KEY = 'hotel_token';
 export const BRAND_NAME = 'Hearts'; // placeholder — change here only
+// Where each role lands after sign-in or when bounced from a page they can't open
+export const getHomePath = (role) => (role === USER_ROLES.GUEST ? '/' : '/admin');

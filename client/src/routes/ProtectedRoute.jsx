@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import { getHomePath } from "../utils/constants";
 function ProtectedRoute({ roles }) {
   const { user, loading, isAuthenticated } = useAuth();
   const location = useLocation();
@@ -21,7 +21,7 @@ function ProtectedRoute({ roles }) {
   }
 
   if (roles && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={getHomePath(user.role)} replace />;
   }
 
   return <Outlet />;
