@@ -2,7 +2,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Room from '../models/Room.js';
-
+import Image from '../models/Image.js';
 const rooms = [
   { roomNumber: '101', roomType: 'Garden Deluxe', description: 'A calm room overlooking the garden courtyard.', pricePerNight: 4500, capacity: 2, bedType: 'Queen', amenities: ['Wi-Fi', 'Air Conditioning', 'TV'], image: 'photo-1611892440504-42a792e24d32', status: 'available' },
   { roomNumber: '102', roomType: 'Garden Deluxe', description: 'A calm room overlooking the garden courtyard.', pricePerNight: 4500, capacity: 2, bedType: 'Queen', amenities: ['Wi-Fi', 'Air Conditioning', 'TV'], image: 'photo-1611892440504-42a792e24d32', status: 'available' },
@@ -25,6 +25,7 @@ const seedDatabase = async () => {
 
     await User.deleteMany({});
     await Room.deleteMany({});
+     await Image.deleteMany({});
     console.log('Cleared existing users and rooms.');
 
     // Passwords are plain text here on purpose — the User model's

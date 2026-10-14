@@ -102,13 +102,13 @@ function HomePage() {
         </div>
       </section>
 
-      {apiStatus !== null && (
+      {/* {apiStatus !== null && (
         <p className="text-center text-small text-muted-custom pb-4">
           {apiStatus
             ? "System status: all services connected"
             : "System status: unable to reach the server"}
         </p>
-      )}
+      )} */}
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import ImageUploader from "../ImageUploader";
 import Toast from "../Toast";
 
 const PHONE_PATTERN = /^[0-9+()\-\s]{7,20}$/;
@@ -36,11 +35,6 @@ function ProfileForm() {
     return found;
   };
 
-  const handleAvatarChange = async (path) => {
-    await updateProfile({ avatar: path });
-    showToast(path ? "Profile photo updated" : "Profile photo removed");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const found = validate();
@@ -65,17 +59,6 @@ function ProfileForm() {
 
   return (
     <div>
-      <div className="mb-4">
-        <ImageUploader
-          kind="avatar"
-          label="Profile photo"
-          name={user.name}
-          value={user.avatar}
-          onChange={handleAvatarChange}
-          hint="JPG, PNG, or WebP. Saved right away."
-        />
-      </div>
-
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3">
           <label className="form-label">Full name</label>

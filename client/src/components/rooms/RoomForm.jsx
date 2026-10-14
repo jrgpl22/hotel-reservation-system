@@ -180,7 +180,7 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
         </div>
       </div>
 
-      <div className="d-flex justify-content-end gap-2 mt-4">
+      <div className="modal-actions">
         <button
           type="button"
           className="btn btn-outline-primary btn-sm"

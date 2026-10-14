@@ -1017,3 +1017,335 @@ hr, .divider {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
+
+/* ==========================================================================
+   POLISH — links, buttons, modals, empty states, sidebar icons, profile
+   Keep this block at the END of index.css so it overrides earlier rules.
+   ========================================================================== */
+
+/* Links: Bootstrap blue becomes the brand green */
+:root {
+  --bs-link-color-rgb: 24, 60, 53;
+  --bs-link-hover-color-rgb: 15, 39, 33;
+}
+
+a {
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* Buttons: Bootstrap takes hover, focus, and active colors from its own variables.
+   Overriding them stops the blue flash on click and focus. */
+.btn {
+  --bs-btn-focus-shadow-rgb: 24, 60, 53;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.95rem;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--color-primary-dark);
+  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--color-primary-dark);
+  --bs-btn-active-border-color: var(--color-primary-dark);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--color-primary);
+  --bs-btn-disabled-border-color: var(--color-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--color-primary);
+  --bs-btn-hover-border-color: var(--color-primary);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--color-primary-dark);
+  --bs-btn-active-border-color: var(--color-primary-dark);
+  --bs-btn-disabled-color: var(--color-primary);
+  --bs-btn-disabled-border-color: var(--color-primary);
+}
+
+.btn-danger {
+  --bs-btn-focus-shadow-rgb: 166, 67, 58;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--color-danger);
+  --bs-btn-border-color: var(--color-danger);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #8a362e;
+  --bs-btn-hover-border-color: #8a362e;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #8a362e;
+  --bs-btn-active-border-color: #8a362e;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--color-danger);
+  --bs-btn-disabled-border-color: var(--color-danger);
+}
+
+.btn-accent {
+  --bs-btn-focus-shadow-rgb: 180, 146, 95;
+  --bs-btn-color: var(--color-primary-dark);
+  --bs-btn-bg: var(--color-accent);
+  --bs-btn-border-color: var(--color-accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #a17f4c;
+  --bs-btn-hover-border-color: #a17f4c;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #a17f4c;
+  --bs-btn-active-border-color: #a17f4c;
+}
+
+.btn-primary:hover:not(:disabled),
+.btn-accent:hover:not(:disabled),
+.btn-danger:hover:not(:disabled) {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* Modals: always scrollable, with a footer that stays in view */
+.modal-center-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  display: flex;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* margin:auto centers when short and lets the top stay reachable when tall */
+.modal-center-wrap > .modal-dialog-custom {
+  margin: auto;
+}
+
+.modal-scroll {
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal-pad {
+  padding: var(--space-4);
+}
+
+.modal-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: var(--space-4) calc(-1 * var(--space-4)) calc(-1 * var(--space-4));
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+.modal-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  margin-bottom: var(--space-3);
+}
+
+/* Empty states */
+.state-message p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-7) var(--space-4);
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-soft);
+  color: var(--color-primary);
+  margin-bottom: var(--space-3);
+}
+
+.empty-state p {
+  color: var(--color-text-muted);
+  max-width: 44ch;
+  margin: 0 auto var(--space-4);
+}
+
+.empty-state p:last-child {
+  margin-bottom: 0;
+}
+
+/* Sidebar icons */
+.admin-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-sidebar-link svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.admin-sidebar-link.active svg {
+  opacity: 1;
+}
+
+/* Profile */
+.profile-card {
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.profile-meta {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.profile-meta li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.profile-meta svg {
+  flex-shrink: 0;
+}
+
+.profile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out);
+}
+
+.profile-link:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-primary-dark);
+}
+
+/* ==========================================================================
+   Jeyan's reservation pages use btn-* classes without the base .btn class.
+   This gives them the same base styling so they render as real buttons.
+   ========================================================================== */
+:is(.btn-primary, .btn-outline-primary, .btn-danger, .btn-accent):not(.btn) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+:is(.btn-primary, .btn-outline-primary, .btn-danger, .btn-accent):not(.btn):hover {
+  text-decoration: none;
+}
+
+:is(.btn-primary, .btn-danger, .btn-accent):not(.btn):hover:not(:disabled) {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+:is(.btn-primary, .btn-outline-primary, .btn-danger, .btn-accent):not(.btn):active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+:is(.btn-primary, .btn-outline-primary, .btn-danger, .btn-accent):not(.btn):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Compact size inside tables, where the row actions live */
+.table :is(.btn-primary, .btn-outline-primary, .btn-danger, .btn-accent):not(.btn) {
+  padding: 0.4rem 0.95rem;
+  font-size: 0.85rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}

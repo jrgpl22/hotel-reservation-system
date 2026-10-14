@@ -1,14 +1,26 @@
 import { NavLink, Link } from "react-router-dom";
 import { BRAND_NAME, USER_ROLES } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
+import Icon from "./Icon";
 
 const { ADMIN, STAFF } = USER_ROLES;
 
 const links = [
-  { to: "/admin", label: "Dashboard", end: true, roles: [ADMIN, STAFF] },
-  { to: "/admin/rooms", label: "Rooms", roles: [ADMIN] },
-  { to: "/admin/reservations", label: "Reservations", roles: [ADMIN, STAFF] },
-  { to: "/admin/users", label: "Users", roles: [ADMIN] },
+  {
+    to: "/admin",
+    label: "Dashboard",
+    icon: "dashboard",
+    end: true,
+    roles: [ADMIN, STAFF],
+  },
+  { to: "/admin/rooms", label: "Rooms", icon: "rooms", roles: [ADMIN] },
+  {
+    to: "/admin/reservations",
+    label: "Reservations",
+    icon: "calendar",
+    roles: [ADMIN, STAFF],
+  },
+  { to: "/admin/users", label: "Users", icon: "users", roles: [ADMIN] },
 ];
 
 function AdminSidebar({ open = false, onNavigate = () => {} }) {
@@ -30,6 +42,7 @@ function AdminSidebar({ open = false, onNavigate = () => {} }) {
                 `admin-sidebar-link${isActive ? " active" : ""}`
               }
             >
+              <Icon name={link.icon} />
               {link.label}
             </NavLink>
           ))}
@@ -37,7 +50,14 @@ function AdminSidebar({ open = false, onNavigate = () => {} }) {
       </div>
 
       <div className="admin-sidebar-footer mt-auto">
-        <Link to="/" className="admin-sidebar-link" onClick={onNavigate}>
+        <Link
+          to="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="admin-sidebar-link"
+          onClick={onNavigate}
+        >
+          <Icon name="external" />
           View website
         </Link>
       </div>

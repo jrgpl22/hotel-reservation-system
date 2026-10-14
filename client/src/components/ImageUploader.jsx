@@ -9,7 +9,15 @@ const RESIZE = { room: { maxSize: 1600 }, avatar: { maxSize: 400 } };
 
 // kind is "room" or "avatar". onChange receives the new image path ('' when removed)
 // and may be async. If it throws, the message is shown under the buttons.
-function ImageUploader({ kind, value, onChange, label, name = "", hint }) {
+function ImageUploader({
+  kind,
+  value,
+  onChange,
+  label,
+  name = "",
+  hint,
+  stacked = false,
+}) {
   const inputRef = useRef(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -61,9 +69,11 @@ function ImageUploader({ kind, value, onChange, label, name = "", hint }) {
 
   return (
     <div>
-      <label className="form-label">{label}</label>
+      {label && <label className="form-label">{label}</label>}
       <div
-        className={`d-flex gap-3 ${isAvatar ? "align-items-center" : "flex-column"}`}
+        className={`d-flex gap-3 ${isAvatar && !stacked ? "align-items-center" : "flex-column"} ${
+          stacked ? "align-items-center text-center" : ""
+        }`}
       >
         {isAvatar ? (
           <Avatar name={name} src={value} size="xl" />
@@ -85,7 +95,9 @@ function ImageUploader({ kind, value, onChange, label, name = "", hint }) {
             className="d-none"
             onChange={handleFile}
           />
-          <div className="d-flex gap-2">
+          <div
+            className={`d-flex gap-2 ${stacked ? "justify-content-center" : ""}`}
+          >
             <button
               type="button"
               className={`btn btn-outline-primary btn-sm ${busy ? "btn-loading" : ""}`}
