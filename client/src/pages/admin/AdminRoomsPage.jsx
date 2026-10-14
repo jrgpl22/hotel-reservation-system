@@ -57,41 +57,36 @@ function AdminRoomsPage() {
     setEditingRoom(room);
     setShowForm(true);
   };
-
+  const showToast = (message, type = "success") =>
+    setToast({ message, type, id: Date.now() });
   const handleFormSubmit = async (data) => {
     setFormLoading(true);
     try {
       if (editingRoom) {
         await api.put(`/rooms/${editingRoom._id}`, data);
-        setToast({ message: "Room updated successfully", type: "success" });
+        showToast("Room updated successfully");
       } else {
         await api.post("/rooms", data);
-        setToast({ message: "Room added successfully", type: "success" });
+        showToast("Room added successfully");
       }
       setShowForm(false);
       fetchRooms();
     } catch (err) {
-      setToast({
-        message: err.userMessage || "Something went wrong",
-        type: "error",
-      });
+      showToast(err.userMessage || "Something went wrong", "error");
     } finally {
       setFormLoading(false);
     }
   };
 
   const handleDelete = async () => {
+    const target = deleteTarget;
+    setDeleteTarget(null);
     try {
-      await api.delete(`/rooms/${deleteTarget._id}`);
-      setToast({ message: "Room deleted successfully", type: "success" });
-      setDeleteTarget(null);
+      await api.delete(`/rooms/${target._id}`);
+      showToast("Room deleted successfully");
       fetchRooms();
     } catch (err) {
-      setToast({
-        message: err.userMessage || "Unable to delete this room",
-        type: "error",
-      });
-      setDeleteTarget(null);
+      showToast(err.userMessage || "Unable to delete this room", "error");
     }
   };
 
@@ -227,6 +222,7 @@ function AdminRoomsPage() {
 
       {toast && (
         <Toast
+          key={toast.id}
           message={toast.message}
           type={toast.type}
           onClose={() => setToast(null)}

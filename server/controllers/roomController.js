@@ -21,19 +21,27 @@ const pickRoomFields = (body) => {
 
 const allImagesOf = (room) => [...new Set([room.image, ...(room.images || [])].filter(Boolean))];
 
+const asString = (value) => (typeof value === 'string' ? value : '');
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const MAX_LIMIT = 50;
+
+// @route GET /api/rooms
 // @route GET /api/rooms
 export const getRooms = async (req, res, next) => {
   try {
-    const { page = 1, limit = 9, search = '', roomType, capacity, minPrice, maxPrice, status } = req.query;
+    const search = asString(req.query.search).trim();
+    const roomType = asString(req.query.roomType);
+    const status = asString(req.query.status);
+    const { capacity, minPrice, maxPrice } = req.query;
+
+    const pageNum = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limitNum = Math.min(MAX_LIMIT, Math.max(1, parseInt(req.query.limit, 10) || 9));
 
     const query = {};
 
     if (search) {
-      query.$or = [
-        { roomNumber: { $regex: search, $options: 'i' } },
-        { roomType: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-      ];
+      const pattern = new RegExp(escapeRegex(search), 'i');
+      query.$or = [{ roomNumber: pattern }, { roomType: pattern }, { description: pattern }];
     }
 
     if (roomType) query.roomType = roomType;
@@ -53,12 +61,8 @@ export const getRooms = async (req, res, next) => {
       if (maxPrice) query.pricePerNight.$lte = Number(maxPrice);
     }
 
-    const pageNum = Math.max(1, parseInt(page));
-    const limitNum = Math.max(1, parseInt(limit));
-    const skip = (pageNum - 1) * limitNum;
-
     const [rooms, totalItems] = await Promise.all([
-      Room.find(query).sort({ roomNumber: 1 }).skip(skip).limit(limitNum),
+      Room.find(query).sort({ roomNumber: 1 }).skip((pageNum - 1) * limitNum).limit(limitNum),
       Room.countDocuments(query),
     ]);
 

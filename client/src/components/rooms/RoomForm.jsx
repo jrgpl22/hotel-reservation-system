@@ -82,7 +82,7 @@ function RoomForm({ initialData, onSubmit, onCancel, loading }) {
           <MultiImageUploader
             label="Room photos"
             images={form.images}
-            onChange={(images) => setForm({ ...form, images })}
+            onChange={(images) => setForm((prev) => ({ ...prev, images }))}
           />
         </div>
 
